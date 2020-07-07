@@ -244,42 +244,7 @@ map.on("load", function(){
 					]
 				}
 			});
-			map.addLayer({
-				"id": "MV1-MV2-Satellite",
-				"type": "circle",
-				"source-layer": "200513_MV1_MV2_satellite_imag-drf3nv",
-				"source": "MV1-MV2-Satellite",
-				"visibility" : "visible",
-				'paint': {
-					// make circles larger as the user zooms from z12 to z22
-					'circle-radius': {
-						'base': 1.75,
-						'stops': [
-							[12, 2],
-							[22, 10]
-						]
-					},
-					// color circles by ethnicity, using a match expression
-					// https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-match
-					'circle-color': [
-						'match',
-						['get', 'voltage'],
-						'11',
-						'#c500bd',
-						'33',
-						'#FF9E00',
-						'66',
-						'#1DCD2F',
-						'132',
-						'#000FFF',
-						'230',
-						'#FF0017',
-						'500',
-						'#CA00CA',
-						/* other */ '#696B84'
-					]
-				}
-			});
+
 
 			map.addLayer({
 				"id": "MPM",
@@ -318,29 +283,7 @@ map.on("load", function(){
 				}
 			});
 			//add transformers from MPM
-			map.addLayer({
-				"id": "MPM Transformers",
-				"type": "circle",
-				"source-layer": "120920-200316_MPM_CLEAN_ONLYL-2mqdwz",
-				"source": "MPM",
-				"visibility" : "visible",
-				'paint': {
-					'circle-radius': [
-						'match',
-						['get', 'label'],
-						'tr',
-						3,
-						0
-					],
-					'circle-color': [
-						'match',
-						['get', 'label'],
-						"tr",
-						'#000000',
-						"#ffffff"
-					]
-				}
-			});
+
 			map.addLayer({
 				"id": "Substations and Power Plants",
 				"type":"circle",
@@ -427,7 +370,7 @@ map.on("load", function(){
 			});
 	});
 
-var toggleableLayerIds = ['SELECT LAYER:','ESE 5Y Plan (2017-2023)','Hydroelectric Plant','Gas Plant','OpenInfraMV2','MV1-MV2-Satellite','Substations and Power Plants','MPM','MPM Transformers'];
+var toggleableLayerIds = ['SELECT LAYER:','ESE 5Y Plan (2017-2023)','Hydroelectric Plant','Gas Plant','OpenInfraMV2','Substations and Power Plants','MPM'];
 
 // set up the corresponding toggle button for each layer
 for (var i = 0; i < toggleableLayerIds.length; i++) {
