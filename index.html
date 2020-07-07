@@ -133,7 +133,7 @@ map.on("load", function(){
 				"type":"vector",
 				"url": "mapbox://guyom07.docze9co"
 			});
-			map.addSource("villages",{
+			map.addSource("villages", {
 				"type": "vector",
 				"url": "mapbox://guyom07.ditoc7od"
 			});
@@ -365,12 +365,12 @@ map.on("load", function(){
 			map.addLayer({
 				"id":"Villages",
 				"type": "circle",
-				"source-layer": "village-20nyv6",
+				"source-layer": "villages-20nyv6",
 				"source": "villages",
 				"visibility": "visible",
 				"paint": {
 					"circle-color": "#000000",
-					"circle-radius": 2
+					"circle-radius": 4
 				}
 			});
 	});
