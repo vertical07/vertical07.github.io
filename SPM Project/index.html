@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Display a map</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+	#menu {
+		background: #fff;
+		position: absolute;
+		z-index: 1;
+		top: 1px;
+		left: 1px;
+		border-radius: 3px;
+		width: 200px;
+		border: 1px solid rgba(0, 0, 0, 0.4);
+		font-family: 'Open Sans', sans-serif;
+	}
+
+	#menu a {
+		font-size: 13px;
+		color: #404040;
+		display: block;
+		margin: 0;
+		padding: 0;
+		padding: 10px;
+		text-decoration: none;
+		border-bottom: 1px solid rgba(114, 114, 114, 0.5);
+		text-align: left;
+	}
+
+	#menu a:last-child {
+		border: none;
+	}
+
+	#menu a:hover {
+		background-color: #f8f8f8;
+		color: #404040;
+	}
+
+	#menu a.active {
+		background-color: #000000;
+		color: #ffffff;
+	}
+
+	#menu a.active:hover {
+		background: #3074a4;
+	}
+</style>
+
+//scripts for geocoder
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<link
+	rel="stylesheet"
+	href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+	type="text/css"
+/>
+	<!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+//end of scripts for Geocoder
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css' />
+
+<nav id="menu"></nav>
+<div id="map"></div>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoiZ3V5b20wNyIsImEiOiJjazhzejg4MnAwNDBkM2V0YXowN3U0OG9yIn0.fRdRAfiiiGQ3jrbh4I3y8w';
+var map = new mapboxgl.Map({
+	container: 'map', // container id
+	style: 'mapbox://styles/guyom07/ckammrhg90x4j1ipka6j8syjj', // stylesheet location
+	center: [97, 20], // starting position [lng, lat]
+	zoom: 8 // starting zoom
+});
+var Draw = new MapboxDraw();
+
+// Map#addControl takes an optional second argument to set the position of the control.
+// If no position is specified the control defaults to `top-right`. See the docs
+// for more details: https://docs.mapbox.com/mapbox-gl-js/api/#map#addcontrol
+
+map.addControl(Draw, 'bottom-left');
+map.addControl(
+	new MapboxGeocoder({
+		accessToken: mapboxgl.accessToken,
+		mapboxgl: mapboxgl
+	})
+);
+
+//MAP CONTROLS
+map.addControl(new mapboxgl.NavigationControl());
+
+//geolocate user
+map.addControl(
+	new mapboxgl.GeolocateControl({
+		positionOptions: {
+			enableHighAccuracy: true
+		},
+		trackUserLocation: true
+	})
+);
+//add sources to the map
+map.on("load", function(){
+
+			map.addSource("MV1-MV2-Satellite", {
+				"type": "vector",
+				"url": "mapbox://guyom07.cdaacotk"
+			});
+			map.addSource("substation_230KV", {
+				"type": "vector",
+				"url": "mapbox://guyom07.5g9nhf5g"
+			});
+			map.addSource("substation_132KV", {
+				"type": "vector",
+				"url": "mapbox://guyom07.dxtknhj2"
+			});
+			map.addSource("substation_66KV", {
+				"type": "vector",
+				"url": "mapbox://guyom07.2qcfq7is"
+			});
+			map.addSource("substation_33KV", {
+				"type": "vector",
+				"url": "mapbox://guyom07.55edm8oz"
+			});
+			map.addSource("gridlines", {
+				"type": "vector",
+				"url": "mapbox://guyom07.2kjmjhf2"
+			});
+			map.addSource("dams_existing", {
+				"type": "vector",
+				"url": "mapbox://guyom07.6oc3xiee"
+			});
+			map.addSource("substation_unknownKV", {
+				"type":"vector",
+				"url": "mapbox://guyom07.3p1rkllx"
+			});
+			map.addSource("MPM", {
+				"type": "vector",
+				"url": "mapbox://guyom07.625hs7j1"
+			});
+			map.addSource("ESE5Y", {
+				"type": "vector",
+				"url": "mapbox://guyom07.dwcpdcm1"
+			});
+			map.addSource("gas_existing", {
+				"type": "vector",
+				"url": "mapbox://guyom07.9ptd4umh"
+			});
+			map.addSource("substations_generation", {
+				"type":"vector",
+				"url": "mapbox://guyom07.bkga00gn"
+			});
+			map.addSource("ESE_5Y_Plan_Master", {
+				"type":"vector",
+				"url": "mapbox://guyom07.docze9co"
+			});
+//add layers from sources above
+			map.addLayer({
+				"id": "ESE 5Y Plan (2017-2023)",
+				"type": "circle",
+				"source-layer":"ESE_5Y_Plan_Master-77jkcb",
+				"source": "ESE_5Y_Plan_Master",
+				"visibility": "visible",
+				"paint": {
+					// make circles larger as the user zooms from z12 to z22
+					'circle-radius': {
+						'base': 1.75,
+						'stops': [
+							[12, 5],
+							[22, 10]
+						]
+					},
+					// color circles by ethnicity, using a match expression
+					// https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-match
+					'circle-color': [
+						'match',
+						['get', 'voltage'],
+						"11",
+						'#c500bd',
+						"33",
+						'#FF9E00',
+						"33/11",
+						'#FF9E00',
+						'66',
+						'#1DCD2F',
+						'66/33',
+						'#1DCD2F',
+						'66/11',
+						'#1DCD2F',
+						'66/33/11',
+						'#1DCD2F',
+						'132',
+						'#000FFF',
+						'132/66',
+						'#000FFF',
+						'132/66/33',
+						'#000FFF',
+						'230',
+						'#FF0017',
+						'230/132',
+						'#FF0017',
+						'230/66',
+						'#FF0017',
+						'230/66/33',
+						'#FF0017',
+						'500',
+						'#CA00CA',
+						/* other */ '#696B84'
+					],
+					"circle-stroke-color": "#130A13",
+					"circle-stroke-width":1
+				}
+			});
+			map.addLayer({
+				"id": "OpenInfraMV2",
+				"type": "line",
+				"source-layer": "OpenInfraMV2-1k27g1",
+				"source": "gridlines",
+				"visibility" : "visible",
+				"paint": {
+					'line-width': 2,
+					'line-color': [
+						'match',
+						['get', "voltage"],
+						[33],
+						'#FF9E00',
+						[66],
+						'#1DCD2F',
+						[132],
+						'#000FFF',
+						[230],
+						'#FF0017',
+						[500],
+						'#CA00CA',
+						/* other */ '#696B84'
+					]
+				}
+			});
+			map.addLayer({
+				"id": "MV1-MV2-Satellite",
+				"type": "circle",
+				"source-layer": "200513_MV1_MV2_satellite_imag-drf3nv",
+				"source": "MV1-MV2-Satellite",
+				"visibility" : "visible",
+				'paint': {
+					// make circles larger as the user zooms from z12 to z22
+					'circle-radius': {
+						'base': 1.75,
+						'stops': [
+							[12, 2],
+							[22, 10]
+						]
+					},
+					// color circles by ethnicity, using a match expression
+					// https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-match
+					'circle-color': [
+						'match',
+						['get', 'voltage'],
+						'11',
+						'#c500bd',
+						'33',
+						'#FF9E00',
+						'66',
+						'#1DCD2F',
+						'132',
+						'#000FFF',
+						'230',
+						'#FF0017',
+						'500',
+						'#CA00CA',
+						/* other */ '#696B84'
+					]
+				}
+			});
+
+			map.addLayer({
+				"id": "MPM",
+				"type": "circle",
+				"source-layer": "120920-200316_MPM_CLEAN_ONLYL-2mqdwz",
+				"source": "MPM",
+				"visibility" : "visible",
+				'paint': {
+					// make circles larger as the user zooms from z12 to z22
+					'circle-radius': {
+						'base': 1.75,
+						'stops': [
+							[12, 2],
+							[22, 10]
+						]
+					},
+					// color circles by ethnicity, using a match expression
+					// https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-match
+					'circle-color': [
+						'match',
+						['get', 'voltage'],
+						'11',
+						'#c500bd',
+						'33',
+						'#FF9E00',
+						'66',
+						'#1DCD2F',
+						'132',
+						'#000FFF',
+						'230',
+						'#FF0017',
+						'500',
+						'#CA00CA',
+						/* other */ '#696B84'
+					]
+				}
+			});
+			//add transformers from MPM
+			map.addLayer({
+				"id": "MPM Transformers",
+				"type": "circle",
+				"source-layer": "120920-200316_MPM_CLEAN_ONLYL-2mqdwz",
+				"source": "MPM",
+				"visibility" : "visible",
+				'paint': {
+					'circle-radius': [
+						'match',
+						['get', 'label'],
+						'tr',
+						3,
+						0
+					],
+					'circle-color': [
+						'match',
+						['get', 'label'],
+						"tr",
+						'#000000',
+						"#ffffff"
+					]
+				}
+			});
+			map.addLayer({
+				"id": "Substations and Power Plants",
+				"type":"circle",
+				"source-layer": "200525_substations_generation-9ci6ic",
+				"source": "substations_generation",
+				"visibility": "visible",
+				"paint": {
+					// make circles larger as the user zooms from z12 to z22
+					'circle-radius': {
+						'base': 1.75,
+						'stops': [
+							[12, 5],
+							[22, 10]
+						]
+					},
+					// color circles by ethnicity, using a match expression
+					// https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-match
+					'circle-color': [
+						'match',
+						['get', 'voltage'],
+						"11",
+						'#c500bd',
+						"33",
+						'#FF9E00',
+						"33/11",
+						'#FF9E00',
+						'66',
+						'#1DCD2F',
+						'66/33',
+						'#1DCD2F',
+						'66/11',
+						'#1DCD2F',
+						'66/33/11',
+						'#1DCD2F',
+						'132',
+						'#000FFF',
+						'132/66',
+						'#000FFF',
+						'132/66/33',
+						'#000FFF',
+						'230',
+						'#FF0017',
+						'230/132',
+						'#FF0017',
+						'230/66',
+						'#FF0017',
+						'230/66/33',
+						'#FF0017',
+						'500',
+						'#CA00CA',
+						/* other */ '#696B84'
+					],
+					"circle-stroke-color": "#130A13",
+					"circle-stroke-width":1
+				}
+			});
+
+			map.addLayer({
+				"id": "Hydroelectric Plant",
+				"type": "circle",
+				"source-layer": "200513_generation_dams_exist-a6t8yl",
+				"source": "dams_existing",
+				"visibility": "visible",
+				"paint": {
+					"circle-color": "#ffffff",
+					"circle-radius": 5,
+					"circle-stroke-color": "#000FFF",
+					"circle-stroke-width": 2
+				}
+			});
+
+			map.addLayer({
+				"id": "Gas Plant",
+				"type": "circle",
+				"source-layer": "200513_generation_gas_exist-4wwqel",
+				"source": "gas_existing",
+				"visibility": "visible",
+				"paint": {
+					"circle-color": "#ffffff",
+					"circle-radius": 5,
+					"circle-stroke-color": "#FF0017",
+					"circle-stroke-width": 2
+				}
+			});
+	});
+
+var toggleableLayerIds = ['SELECT LAYER:','ESE 5Y Plan (2017-2023)','Hydroelectric Plant','Gas Plant','OpenInfraMV2','MV1-MV2-Satellite','Substations and Power Plants','MPM','MPM Transformers'];
+
+// set up the corresponding toggle button for each layer
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+	var id = toggleableLayerIds[i];
+
+	var link = document.createElement('a');
+	link.href = '#';
+	link.className = 'active';
+	link.textContent = id;
+
+	link.onclick = function(e) {
+		var clickedLayer = this.textContent;
+		e.preventDefault();
+		e.stopPropagation();
+
+		var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+		// toggle layer visibility by changing the layout object's visibility property
+		if (visibility === 'visible') {
+			map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+			this.className = '';
+		} else {
+			this.className = 'active';
+			map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+		}
+	};
+
+	var layers = document.getElementById('menu');
+	layers.appendChild(link);
+}
+</script>
+
+</body>
+</html>
