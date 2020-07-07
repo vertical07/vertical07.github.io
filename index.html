@@ -109,27 +109,6 @@ map.addControl(
 );
 //add sources to the map
 map.on("load", function(){
-
-			map.addSource("MV1-MV2-Satellite", {
-				"type": "vector",
-				"url": "mapbox://guyom07.cdaacotk"
-			});
-			map.addSource("substation_230KV", {
-				"type": "vector",
-				"url": "mapbox://guyom07.5g9nhf5g"
-			});
-			map.addSource("substation_132KV", {
-				"type": "vector",
-				"url": "mapbox://guyom07.dxtknhj2"
-			});
-			map.addSource("substation_66KV", {
-				"type": "vector",
-				"url": "mapbox://guyom07.2qcfq7is"
-			});
-			map.addSource("substation_33KV", {
-				"type": "vector",
-				"url": "mapbox://guyom07.55edm8oz"
-			});
 			map.addSource("gridlines", {
 				"type": "vector",
 				"url": "mapbox://guyom07.2kjmjhf2"
@@ -138,17 +117,9 @@ map.on("load", function(){
 				"type": "vector",
 				"url": "mapbox://guyom07.6oc3xiee"
 			});
-			map.addSource("substation_unknownKV", {
-				"type":"vector",
-				"url": "mapbox://guyom07.3p1rkllx"
-			});
 			map.addSource("MPM", {
 				"type": "vector",
 				"url": "mapbox://guyom07.625hs7j1"
-			});
-			map.addSource("ESE5Y", {
-				"type": "vector",
-				"url": "mapbox://guyom07.dwcpdcm1"
 			});
 			map.addSource("gas_existing", {
 				"type": "vector",
@@ -161,6 +132,10 @@ map.on("load", function(){
 			map.addSource("ESE_5Y_Plan_Master", {
 				"type":"vector",
 				"url": "mapbox://guyom07.docze9co"
+			});
+			map.addSource("villages",{
+				"type": "vector",
+				"url": "mapbox://guyom07.ditoc7od"
 			});
 //add layers from sources above
 			map.addLayer({
@@ -215,10 +190,29 @@ map.on("load", function(){
 						'#CA00CA',
 						/* other */ '#696B84'
 					],
-					"circle-stroke-color": "#130A13",
+					"circle-stroke-color": [
+						'match',
+						['get', 'year'],
+						"exist",
+						'#000000',
+						"2018",
+						'#000000',
+						"2019",
+						'#000000',
+						'2020',
+						'#ffffff',
+						'2021',
+						'#ffffff',
+						'2022',
+						'#ffffff',
+						'2023',
+						'#ffffff',
+						/* other */ '#ffffff'
+					],
 					"circle-stroke-width":1
 				}
 			});
+
 			map.addLayer({
 				"id": "OpenInfraMV2",
 				"type": "line",
@@ -366,6 +360,17 @@ map.on("load", function(){
 					"circle-radius": 5,
 					"circle-stroke-color": "#FF0017",
 					"circle-stroke-width": 2
+				}
+			});
+			map.addLayer({
+				"id":"Villages",
+				"type": "circle",
+				"source-layer": "village-20nyv6",
+				"source": "villages",
+				"visibility": "visible",
+				"paint": {
+					"circle-color": "#000000",
+					"circle-radius": 2
 				}
 			});
 	});
